@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+PWD="$(pwd -P)"
+
+function cleanUpTmpDir {
+  rm -rf "${TMP_DIR}"
+}
+
+function infoEcho {
+  echo "INFO: ${1}" 1>&2
+}
+
+function errorEcho {
+  echo "ERROR: ${1}" 1>&2
+  exit 1
+}
+
+function errorUsage {
+  echo "ERROR: ${1}" 1>&2
+  echo ""
+  usage
+  exit 1
+}
+
+# check prerequisites
+for cmd in openssl; do
+  command -v ${cmd} >/dev/null || {
+    echo >&2 "${cmd} must be installed - exiting..."
+    exit 1
+  }
+done
+
+function usage() {
+  echo "Generates new certificates used to encrypt credentials within this repository"
+}
+
+while [[ $# -gt 0 ]]; do
+  key="${1}"
+
+  case $key in
+  --config-file | -c)
+    shift
+    export CONFIG_FILE="${1}"
+    shift
+    ;;
+  --force | -f)
+    shift
+    export FORCE=1
+    ;;
+  --help | -h | help)
+    usage
+    exit 0
+    ;;
+  *)
+    shift
+    ;;
+  esac
+done
+
+# Create temp dir
+TMP_DIR="$(mktemp -d)"
+trap cleanUpTmpDir EXIT
+
+# Generate certificate and key
+infoEcho "Generating new certificate and key"
+openssl req \
+  -nodes \
+  -new \
+  -x509 \
+  -days 3650 \
+  -keyout "${TMP_DIR}/key.crt" \
+  -out "${TMP_DIR}/cert.crt" \
+  -subj "/C=DE/ST=City/L=City/O=Orga/OU=IT Department" \
+  &>/dev/null
+
+# Convert certificate and key to base64
+KEYBASE64="$(cat ${TMP_DIR}/key.crt | base64 -w0)"
+CERTBASE64="$(cat ${TMP_DIR}/cert.crt | base64 -w0)"
+
+echo ""
+echo "#################################### CERTBASE64: ####################################"
+echo "$CERTBASE64"
+echo ""
+echo "#################################### KEYBASE64: #####################################"
+echo $KEYBASE64
+
+echo ""
+echo ""
+infoEcho "Successfully!"
