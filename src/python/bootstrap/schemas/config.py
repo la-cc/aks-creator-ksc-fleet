@@ -5,6 +5,11 @@ config_schema = Schema({
     "clusters": [
         {
             "name": str,
+            "defaults": {
+                "storageClass": str,
+                Optional("clusterIssuerDNS", default="letsencrypt-dns"): str,
+                Optional("clusterIssuerHTTP", default="letsencrypt-http"): str,
+            },
             "service_catalog": {
                 "argocd_core": {
                     "git_repository_URL": str,
@@ -13,21 +18,27 @@ config_schema = Schema({
                     Optional("git_repository_PAT"): str,
                     Optional("git_repository_user"): str,
                     Optional("ingress"): {
-                        Optional("enable", default=False): bool,
+                        Optional("enabled", default=False): bool,
                         Optional("hostname"): str,
                         Optional("issuer", default="letsencrypt-dns"): str
                     }
                 },
                 Optional("externalDNS"): {
-                    Optional("enable", default=False): bool,
+                    Optional("enabled", default=False): bool,
                     Optional("resource_group"): str,
                     Optional("tenantID"): str,
                     Optional("subscriptionID"): str,
                     Optional("domain_filters"): list,
                     Optional("txtOwnerId"): str,
                 },
+                Optional("mail"): {
+                    Optional("ingress"): {
+                        Optional("enabled", default=False): bool,
+                        Optional("hostname"): str
+                    }
+                },
                 Optional("sealed_secrets"): {
-                    Optional("enable", default=False): bool,
+                    Optional("enabled", default=False): bool,
                     Optional("tls"): {
                         Optional("crt"): str,
                         Optional("key"): str
@@ -36,19 +47,131 @@ config_schema = Schema({
 
                 Optional("security"): {
                     Optional("clusterIssuerDNS"): {
-                        Optional("enable", default=False): bool,
+                        Optional("enabled", default=False): bool,
                         Optional("e_mail"): str,
                         Optional("subscriptionID"): str,
                         Optional("resourceGroupName"): str,
                         Optional("hostedZoneName"): str,
                     },
                     Optional("clusterIssuerHTTP"): {
-                        Optional("enable", default=False): bool,
+                        Optional("enabled", default=False): bool,
                         Optional("e_mail"): str
+                    }
+                },
+
+                Optional("minio_operator"): {
+                    Optional("enabled", default=False): bool,
+                    Optional("operatorReplicaCount", default=2): int,
+                    Optional("consoleReplicaCount", default=1): int,
+                    Optional("ingress"): {
+                        Optional("enabled", default=False): bool,
+                        Optional("hostname"): str,
+                        Optional("annotationClusterIssuer", default="letsencrypt-dns"): str
+                    }
+
+                },
+
+                Optional("monitoring"): {
+                    Optional("alertrules"): {
+                        Optional("diskalerts", default="true"): str,
+                        Optional("hostalerts", default="true"): str,
+                        Optional("kubernetesalerts", default="true"): str,
+                        Optional("podalerts", default="true"): str
+                    },
+                    "grafana": {
+                        "adminUser": str,
+                        "adminPassword": str,
+                        "hostname": str,
+                        "azure": {
+                            "clientid": str,
+                            "clientsecret": str,
+                            "authurl": str,
+                            "tokenurl": str,
+                            "allowedgroups": str
+                        }
+                    },
+                    "minio": {
+                        "userConfiguration": {
+                            "name": str,
+                            "accessKey": str,
+                            "secretKey": str
+                        },
+                        "tenant": {
+                            "name": str,
+                            "pools": [
+                                {
+                                    "servers": int,
+                                    "name": str,
+                                    "volumesPerServer": int,
+                                    "size": int
+                                }
+                            ],
+                            "buckets": [
+                                {
+                                    "name": str,
+                                    "objectLock": str,
+                                    "region": str
+                                }
+                            ],
+                            "serviceAccountName": str,
+                            Optional("ingress"): {
+                                Optional("api"): {
+                                    Optional("enabled", default="false"): str,
+                                    Optional("host"): str
+                                },
+                                Optional("console"): {
+                                    Optional("enabled", default="false"): str,
+                                    Optional("host"): str
+                                }
+                            }
+                        },
+                    },
+                    "msteamsproxy": {
+                        "debug": str,
+                        "info": str,
+                        "critical": str
+                    },
+                    Optional("loki"): {
+                        Optional("read"): {
+                            Optional("replicaCount", default=2): int,
+                            Optional("persistence"): {
+                                Optional("autoDeletePVC", default=True): bool,
+                                Optional("size", default=5): int,
+                            }
+                        },
+                        Optional("write"): {
+                            Optional("replicaCount", default=2): int,
+                            Optional("persistence"): {
+                                Optional("autoDeletePVC", default=True): bool,
+                                Optional("size", default=5): int,
+                            }
+                        },
+                        Optional("backend"): {
+                            Optional("replicaCount", default=2): int,
+                            Optional("persistence"): {
+                                Optional("autoDeletePVC", default=True): bool,
+                                Optional("size", default=5): int,
+                            }
+                        },
+                    },
+                    "victoriaMetrics": {
+                        Optional("persistentStorageSize", default="16Gi"): str,
+                        "vmagent": {
+                            Optional("enabled", default=False): bool,
+                            "host": str
+                        }
+                    },
+                    "victoriaMetricsAlert": {
+                        "hostname": str
+                    },
+                    "prometheusalertmanager": {
+                        Optional("enabled", default=False): bool,
+                        "hostname": str
                     }
                 }
 
             }
+
         }
     ],
 

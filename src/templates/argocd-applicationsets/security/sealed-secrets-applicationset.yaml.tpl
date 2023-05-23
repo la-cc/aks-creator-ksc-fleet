@@ -8,11 +8,15 @@ spec:
     - clusters:
         selector:
           matchLabels:
-            env: dev
+            env: development
+        values:
+          branch: main
     - clusters:
         selector:
           matchLabels:
-            env: prod
+            env: production
+        values:
+          branch: main
 {% raw %}
   template:
     metadata:
@@ -21,17 +25,20 @@ spec:
         argocd.argoproj.io/manifest-generate-paths: ".;.."
 {% endraw %}
     spec:
-      project: bootstrap
-      source:
-        repoURL: {{ ksc.repoURL }}
-        targetRevision: main
+      project: default
+      sources:
+        - repoURL: {{ ksc.repoURL }}
+          targetRevision: main
+          ref: valuesRepo
 {% raw %}
-        path: "./helm/security/sealed-secrets"
-        helm:
-          releaseName: "sealed-secrets" # Release name override (defaults to application name)
-          valueFiles:
-            - "values.yaml"
-            - "../../../cluster/{{name}}/security/sealed-secrets/values.yaml"
+        - repoURL: https://github.com/Hamburg-Port-Authority/kubernetes-service-catalog.git
+          targetRevision: "{{values.branch}}"
+          path: "./security/sealed-secrets"
+          helm:
+            releaseName: "sealed-secrets" # Release name override (defaults to application name)
+            valueFiles:
+              - "values.yaml"
+              - "$valuesRepo/cluster/{{name}}/security/sealed-secrets/values.yaml"
       destination:
         name: "{{name}}"
         namespace: "sealed-secrets"

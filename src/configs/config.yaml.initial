@@ -10,34 +10,106 @@ clusters:
         git_repository_PAT: <kt....>
         git_repository_user: <ORGA>
         ingress:
-          enable: true
+          enabled: true
           hostname: <argocd.val...example.com>
           issuer: <letsencrypt-dns>
-      # You don't disable the helm chart by setting enable:false, because the chart will be used by other cluster as well. You disable only the custom value for you cluster.
+      # You don't disable the helm chart by setting enabled:false, because the chart will be used by other cluster as well. You disable only the custom value for you cluster.
       externalDNS:
-        enable: true
+        enabled: true
         resource_group: <rg-val...>
         tenantID: <6a.....>
         subscriptionID: <e18....>
         domain_filters:
           - <val...example.com>
         txtOwnerId: <aks-val....>
+      mail:
+        ingress:
+          enabled: false
+          hostname: <mailhog.<YOUR-DOMAIN>...>
       security:
         clusterIssuerDNS:
-          enable: true
+          enabled: true
           e_mail: <testuser@example.com>
           subscriptionID: <e18....>
           resourceGroupName: <rg-va...>
           hostedZoneName: <val...example.com>
         clusterIssuerHTTP:
-          enable: true
+          enabled: true
           e_mail: <testuser@example.com>
-      # You don't disable the helm chart by setting enable:false, because the chart will be used by other cluster as well. You disable only the custom value for you cluster.
+      # You don't disable the helm chart by setting enabled:false, because the chart will be used by other cluster as well. You disable only the custom value for you cluster.
       sealed_secrets:
-        enable: true
+        enabled: true
         tls:
           crt: <"skisjcscs...">
           key: <"sxssikcmc...">
+      minio_operator:
+        enabled: true
+        operatorReplicaCount: 2
+        consoleReplicaCount: 1
+        ingress:
+          enabled: true
+          hostname: <console-minio.valiant-development....>
+          annotationClusterIssuer: <letsencrypt-dns....>
+      monitoring:
+        grafana:
+          adminUser: <"admin">
+          adminPassword: <"6QCf...">
+          hostname: <"grafana....">
+          azure:
+            clientid: <"32fda...">
+            clientsecret: <"xP68Q....">
+            authurl: <"https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/authorize">
+            tokenurl: <"https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/token">
+            allowedgroups: <"8a7042f2-...., e5a25dcd....">
+        minio:
+          userConfiguration:
+            name: loki-minio-configuration
+            accessKey: minio
+            secretKey: <3P....>
+          tenant:
+            name: loki
+            pools:
+              - servers: 1
+                name: loki
+                volumesPerServer: 1
+                size: 1
+            buckets:
+              - name: chunks
+                objectLock: "false"
+                region: datacenter
+              - name: ruler
+                objectLock: "false"
+                region: datacenter
+              - name: admin
+                objectLock: "false"
+                region: datacenter
+            serviceAccountName: minio-loki
+            ingress:
+              api: {}
+              console: {}
+        msteamsproxy:
+          debug: <"https://xy.webhook.office.com/webhookb2/073b64fa-6......">
+          info: <"https://xy.webhook.office.com/webhookb2/073b64fa-6......">
+          critical: <"https://xy.webhook.office.com/webhookb2/073b64......">
+        loki:
+          read:
+            persistence: {}
+          write:
+            persistence: {}
+          backend:
+            persistence: {}
+        victoriaMetrics:
+          persistentStorageSize: <16Gi>
+          vmagent:
+            enabled: true
+            host: <"vmagent....">
+        victoriaMetricsAlert:
+          hostname: <"vmalertmanager....">
+        prometheusalertmanager:
+          enabled: true
+          hostname: <"alertmanager...">
+
+
 
 ksc:
   repoURL: <https://dev.azure.com/OGRA/...>

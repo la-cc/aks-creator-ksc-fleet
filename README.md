@@ -35,7 +35,7 @@ a configuration file is required.
 Open the file `.igor.sh` in your preferred editor and use the following settings to configure `igor`:
 
     # select docker image
-    IGOR_DOCKER_IMAGE=ghcr.io/la-cc/aks-creator-core:0.0.2
+    IGOR_DOCKER_IMAGE=ghcr.io/la-cc/aks-creator-ksc-fleet:0.1.0
     IGOR_DOCKER_COMMAND=                                  # run this command inside the docker container
     IGOR_DOCKER_PULL=0                                    # force pulling the image before starting the container (0/1)
     IGOR_DOCKER_RM=1                                      # remove container on exit (0/1)
@@ -104,27 +104,11 @@ To do so simply execute the script (from inside the aks-creator-core container):
 
     config-template
 
-### Minimum necessary configuration
+### Minimum necessary configuration (TBD)
 
 ```
 ---
-# ArgoCD KSC Fleet Cluster
-clusters:
-  - name: <aks-val.....>
-    service_catalog:
-      argocd_core:
-        git_repository_URL: <https://dev.azure.com/OGRA/...>
-        git_repository_path: <argocd-applicationsets/env/...>
-        ingress: {}
-      externalDNS: {}
-      security: {}
-        clusterIssuerDNS: {}
-        clusterIssuerHTTP: {}
-      sealed_secrets: {}
-        tls: {}
-
-ksc:
-  repoURL: <https://dev.azure.com/OGRA/...>
+....
 ```
 
 ### Maximum possible configuration:
@@ -142,35 +126,115 @@ clusters:
         git_repository_PAT: <kt....>
         git_repository_user: <ORGA>
         ingress:
-          enable: true
+          enabled: true
           hostname: <argocd.val...example.com>
           issuer: <letsencrypt-dns>
-      # You don't disable the helm chart by setting enable:false, because the chart will be used by other cluster as well. You disable only the custom value for you cluster.
+      # You don't disable the helm chart by setting enabled:false, because the chart will be used by other cluster as well. You disable only the custom value for you cluster.
       externalDNS:
-        enable: true
+        enabled: true
         resource_group: <rg-val...>
         tenantID: <6a.....>
         subscriptionID: <e18....>
         domain_filters:
           - <val...example.com>
         txtOwnerId: <aks-val....>
+      mail:
+        ingress:
+          enabled: false
+          hostname: <mailhog.<YOUR-DOMAIN>...>
       security:
         clusterIssuerDNS:
-          enable: true
+          enabled: true
           e_mail: <testuser@example.com>
           subscriptionID: <e18....>
           resourceGroupName: <rg-va...>
           hostedZoneName: <val...example.com>
         clusterIssuerHTTP:
-          enable: true
+          enabled: true
           e_mail: <testuser@example.com>
-      # You don't disable the helm chart by setting enable:false, because the chart will be used by other cluster as well. You disable only the custom value for you cluster.
+      # You don't disable the helm chart by setting enabled:false, because the chart will be used by other cluster as well. You disable only the custom value for you cluster.
       sealed_secrets:
+        enabled: true
         tls:
-          enable: true
           crt: <"skisjcscs...">
           key: <"sxssikcmc...">
-
-ksc:
-  repoURL: <https://dev.azure.com/OGRA/...>
+      minio_operator:
+        enabled: true
+        operatorReplicaCount: 2
+        consoleReplicaCount: 1
+        ingress:
+          enabled: true
+          hostname: <console-minio.valiant-development....>
+          annotationClusterIssuer: <letsencrypt-dns....>
+      monitoring:
+        grafana:
+          adminUser: <"admin">
+          adminPassword: <"6QCf...">
+          hostname: <"grafana....">
+          azure:
+            clientid: <"32fda...">
+            clientsecret: <"xP68Q....">
+            authurl: <"https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/authorize">
+            tokenurl: <"https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/token">
+            allowedgroups: <"dsmk2f2-...., 4432a25dcd....">
+        minio:
+          userConfiguration:
+            name: loki-minio-configuration
+            accessKey: minio
+            secretKey: <3P....>
+          tenant:
+            name: loki
+            pools:
+              - servers: 1
+                name: loki
+                volumesPerServer: 1
+                size: 1
+            buckets:
+              - name: chunks
+                objectLock: "false"
+                region: datacenter
+              - name: ruler
+                objectLock: "false"
+                region: datacenter
+              - name: admin
+                objectLock: "false"
+                region: datacenter
+            serviceAccountName: minio-loki
+            ingress:
+              api:
+                enabled: true
+                host: <loki-api....>
+              console:
+                enabled: true
+                host: <loki-console....>
+        msteamsproxy:
+          debug: <"https://xy.webhook.office.com/webhookb2/073b64fa-6......">
+          info: <"https://xy.webhook.office.com/webhookb2/073b64fa-6......">
+          critical: <"https://xy.webhook.office.com/webhookb2/073b64......">
+        loki:
+          read:
+            replicaCount: 2
+            persistence:
+              autoDeletePVC: true
+              size: 5
+          write:
+            replicaCount: 2
+            persistence:
+              autoDeletePVC: true
+              size: 5
+          backend:
+            replicaCount: 2
+            persistence:
+              autoDeletePVC: true
+              size: 5
+        victoriaMetrics:
+          persistentStorageSize: <16Gi>
+          vmagent:
+            enabled: true
+            host: <"vmagent....">
+        victoriaMetricsAlert:
+          hostname: <"vmalertmanager....">
+        prometheusalertmanager:
+          enabled: true
+          hostname: <"alertmanager...">
 ```

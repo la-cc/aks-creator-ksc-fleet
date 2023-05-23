@@ -8,11 +8,15 @@ spec:
     - clusters:
         selector:
           matchLabels:
-            env: dev
+            env: development
+        values:
+          branch: main
     - clusters:
         selector:
           matchLabels:
-            env: prod
+            env: production
+        values:
+          branch: main
 {% raw %}
   template:
     metadata:
@@ -21,17 +25,20 @@ spec:
         argocd.argoproj.io/manifest-generate-paths: ".;.."
 {% endraw %}
     spec:
-      project: bootstrap
-      source:
-        repoURL: {{ ksc.repoURL }}
-        targetRevision: main
-{% raw %}
-        path: "./helm/dns/external-dns"
-        helm:
-          releaseName: "external-dns" # Release name override (defaults to application name)
-          valueFiles:
-            - "values.yaml"
-            - "../../../cluster/{{name}}/dns/external-dns/values.yaml"
+      project: default
+      sources:
+        - repoURL: {{ ksc.repoURL }}
+          targetRevision: main
+          ref: valuesRepo
+ {% raw %}
+        - repoURL: https://github.com/Hamburg-Port-Authority/kubernetes-service-catalog.git
+          targetRevision: '{{values.branch}}'
+          path: "./dns/external-dns"
+          helm:
+            releaseName: "external-dns" # Release name override (defaults to application name)
+            valueFiles:
+              - "values.yaml"
+              - "$valuesRepo/cluster/{{name}}/dns/external-dns/values.yaml"
       destination:
         name: "{{name}}"
         namespace: "external-dns"

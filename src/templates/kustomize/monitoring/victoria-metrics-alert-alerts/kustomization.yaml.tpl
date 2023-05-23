@@ -1,0 +1,26 @@
+resources:
+  - vmrule-alertmanager.yaml
+  - vmrule-apiserver-availability.yaml
+  - vmrule-apiserver-burnrate.yaml
+  - vmrule-apiserver-histogramm.yaml
+  - vmrule-apiserver-slos.yaml
+  - vmrule-etcd.yaml
+  - vmrule-general.yaml
+  - vmrule-k8s.yaml
+  - vmrule-kube-state-metrics.yaml
+  - vmrule-kubelet.rules.yaml
+  - vmrule-kubernetes-apps.yaml
+  - vmrule-kubernetes-resources.yaml
+  - vmrule-kubernetes-storage.yaml
+  - vmrule-kubernetes-system-apiserver.yaml
+  - vmrule-kubernetes-system-controller.yaml
+  - vmrule-kubernetes-system-kubelet.yaml
+  - vmrule-kubernetes-system-scheduler.yaml
+  - vmrule-kubernetes-system.yaml
+  - vmrule-node-exporter.rules.yaml
+  - vmrule-node-exporter.yaml
+  - vmrule-node-network.yaml
+  - vmrule-node.rules.yaml
+  - vmrule-scheduler.rules.yaml
+  - vmrule-vm-health.yaml
+  - vmrule-vmagent.yaml

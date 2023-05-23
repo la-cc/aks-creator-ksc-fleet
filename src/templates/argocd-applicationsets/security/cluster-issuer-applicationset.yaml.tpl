@@ -8,11 +8,15 @@ spec:
     - clusters:
         selector:
           matchLabels:
-            env: dev
+            env: development
+        values:
+          branch: main
     - clusters:
         selector:
           matchLabels:
-            env: prod
+            env: production
+        values:
+          branch: main
 {% raw %}
   template:
     metadata:
@@ -21,7 +25,7 @@ spec:
         argocd.argoproj.io/manifest-generate-paths: ".;.."
 {% endraw %}
     spec:
-      project: bootstrap
+      project: default
       source:
         repoURL: {{ ksc.repoURL }}
         targetRevision: main

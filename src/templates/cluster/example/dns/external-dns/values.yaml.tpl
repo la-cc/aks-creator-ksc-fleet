@@ -1,4 +1,6 @@
-{% if cluster.service_catalog.externalDNS.enable %}
+{% if cluster.service_catalog.externalDNS.enabled %}
+pdns_api_key: ""
+
 external-dns:
   provider: azure
   azure:

@@ -1,13 +1,13 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-dns
+  name: {{ cluster.defaults.clusterIssuerDNS }}
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
     email: {{ cluster.service_catalog.security.clusterIssuerDNS.e_mail }}
     privateKeySecretRef:
-      name: letsencrypt-dns
+      name: {{ cluster.defaults.clusterIssuerDNS }}
     solvers:
       - dns01:
           azureDNS:

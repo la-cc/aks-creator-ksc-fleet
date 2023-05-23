@@ -8,29 +8,31 @@ spec:
     - clusters:
         selector:
           matchLabels:
-            env: dev
+            env: development
+        values:
+          branch: main
     - clusters:
         selector:
           matchLabels:
-            env: prod
+            env: production
+        values:
+          branch: main
 {% raw %}
   template:
     metadata:
       name: "{{name}}-nginx-ingress"
       annotations:
         argocd.argoproj.io/manifest-generate-paths: ".;.."
-{% endraw %}
     spec:
-      project: bootstrap
-      source:
-        repoURL: {{ ksc.repoURL }}
-        targetRevision: main
-{% raw %}
-        path: "./helm/networking/ingress-nginx"
-        helm:
-          releaseName: "ingress-nginx" # Release name override (defaults to application name)
-          valueFiles:
-            - "values.yaml"
+      project: default
+      sources:
+        - repoURL: https://github.com/Hamburg-Port-Authority/kubernetes-service-catalog.git
+          targetRevision: "{{values.branch}}"
+          path: "./networking/ingress-nginx"
+          helm:
+            releaseName: "ingress-nginx" # Release name override (defaults to application name)
+            valueFiles:
+              - "values.yaml"
       destination:
         name: "{{name}}"
         namespace: "nginx-ingress"
