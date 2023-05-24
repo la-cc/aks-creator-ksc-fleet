@@ -58,7 +58,7 @@ config_schema = Schema({
                         Optional("e_mail"): str
                     },
                     Optional("externalSecrets"): {
-                        Optional("secretStoreName", default="azure-secret-store"): str,
+                        Optional("clusterSecretStoreName", default="azure-cluster-secret-store"): str,
                         "identityId": str,
                         "vaultUrl": str
                     }

@@ -37,7 +37,7 @@ clusters:
           enabled: true
           e_mail: <testuser@example.com>
         externalSecrets:
-          secretStoreName: "<azure-secret-store...>"
+          clusterSecretStoreName: "<azure-secret-store...>"
           #Managed Identity from aks agent-pool (Client ID)
           identityId: "<103.....>"
           vaultUrl: "<https://YOUR_VAULR.vault.azure.net/>

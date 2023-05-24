@@ -1,7 +1,7 @@
 apiVersion: external-secrets.io/v1alpha1
-kind: SecretStore
+kind: ClusterSecretStore
 metadata:
-  name: {{ cluster.service_catalog.security.externalSecrets.secretStoreName }}
+  name: {{ cluster.service_catalog.security.externalSecrets.clusterSecretStoreName }}
 spec:
   provider:
     # provider type: azure keyvault
