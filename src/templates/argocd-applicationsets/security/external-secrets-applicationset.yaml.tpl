@@ -23,9 +23,13 @@ spec:
       name: "{{name}}-external-secrets"
       annotations:
         argocd.argoproj.io/manifest-generate-paths: ".;.."
+{% endraw %}
     spec:
       project: default
       sources:
+        - repoURL: {{ ksc.repoURL }}
+{% raw %}
+          path: cluster/{{name}}/security/external-secrets
         - repoURL: https://github.com/Hamburg-Port-Authority/kubernetes-service-catalog.git
           targetRevision: "{{values.branch}}"
           path: "./security/external-secrets"

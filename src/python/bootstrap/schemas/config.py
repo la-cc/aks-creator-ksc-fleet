@@ -56,7 +56,13 @@ config_schema = Schema({
                     Optional("clusterIssuerHTTP"): {
                         Optional("enabled", default=False): bool,
                         Optional("e_mail"): str
+                    },
+                    Optional("externalSecrets"): {
+                        Optional("secretStoreName", default="azure-secret-store"): str,
+                        "identityId": str,
+                        "vaultUrl": str
                     }
+
                 },
 
                 Optional("minio_operator"): {
