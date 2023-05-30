@@ -48,6 +48,22 @@ spec:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - RespectIgnoreDifferences=true
         retry:
           limit: 10
+      ignoreDifferences:
+        - group: apps
+          kind: StatefulSet
+          name: loki-write
+          jsonPointers:
+            - /spec/persistentVolumeClaimRetentionPolicy/whenDeleted
+            - /spec/persistentVolumeClaimRetentionPolicy/whenScaled
+            - /spec/persistentVolumeClaimRetentionPolicy
+        - group: apps
+          kind: StatefulSet
+          name: loki-read
+          jsonPointers:
+            - /spec/persistentVolumeClaimRetentionPolicy/whenDeleted
+            - /spec/persistentVolumeClaimRetentionPolicy/whenScaled
+            - /spec/persistentVolumeClaimRetentionPolicy
 {% endraw %}
