@@ -19,7 +19,7 @@ config_schema = Schema({
                     Optional("git_repository_private", default=False): bool,
                     Optional("git_repository_PAT"): str,
                     Optional("git_repository_user"): str,
-                    Optional("externalSecret_enabled", default=True): bool,
+                    Optional("external_secret_enabled", default=True): bool,
                     Optional("ingress"): {
                         Optional("enabled", default=False): bool,
                         Optional("hostname"): str,
