@@ -14,6 +14,8 @@ config_schema = Schema({
                 "argocd_core": {
                     "git_repository_URL": str,
                     "git_repository_path": str,
+                    Optional("application_enabled", default=True): bool,
+                    Optional("git_repository_enabled", default=False): bool,
                     Optional("git_repository_private", default=False): bool,
                     Optional("git_repository_PAT"): str,
                     Optional("git_repository_user"): str,

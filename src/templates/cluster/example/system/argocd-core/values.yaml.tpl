@@ -1,9 +1,10 @@
 init:
-  enabled: "true"
   application:
+    enabled: {{ cluster.service_catalog.argocd_core.application_enabled | lower }}
     path: "{{ cluster.service_catalog.argocd_core.git_repository_path }}"
     targetRevision: "main"
   repository:
+    enabled: {{ cluster.service_catalog.argocd_core.git_repository_enabled | lower }}
     url: "{{ cluster.service_catalog.argocd_core.git_repository_URL }}"
     #private == username + pw or ssh-key are needed
   {% if cluster.service_catalog.argocd_core.git_repository_private %}
@@ -46,4 +47,4 @@ argo-cd:
       # -- Maximum number of replicas for the repo server [HPA]
       maxReplicas: 5
   applicationSet:
-    replicaCount: "1"
+    replicaCount: 1
