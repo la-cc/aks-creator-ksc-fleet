@@ -13,6 +13,8 @@ init:
   {% endif %}
     insecure: "false"
     forceHttpBasicAuth: "true"
+    externalSecret:
+      enabled: {{ cluster.service_catalog.argocd_core.external_secret_enabled | lower }}
 
 ingress:
   enabled: "true"
