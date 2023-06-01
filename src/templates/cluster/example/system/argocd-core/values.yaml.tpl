@@ -5,6 +5,7 @@ init:
     targetRevision: "main"
   repository:
     url: "{{ cluster.service_catalog.argocd_core.git_repository_URL }}"
+    #private == username + pw or ssh-key are needed
   {% if cluster.service_catalog.argocd_core.git_repository_private %}
     username: "{{ cluster.service_catalog.argocd_core.git_repository_user }}"
     password: "{{ cluster.service_catalog.argocd_core.git_repository_PAT}}"
