@@ -7,7 +7,9 @@ spec:
     # provider type: azure keyvault
     azurekv:
       authType: ManagedIdentity
+      {% if cluster.service_catalog.security.externalSecrets.identityId is defined %}
       # Optionally set the Id of the Managed Identity, if multiple identities are assigned to external-secrets operator
       identityId: {{ cluster.service_catalog.security.externalSecrets.identityId }}
+      {% endif %}
       # URL of your vault instance, see: https://docs.microsoft.com/en-us/azure/key-vault/general/about-keys-secrets-certificates
       vaultUrl: {{ cluster.service_catalog.security.externalSecrets.vaultUrl }}

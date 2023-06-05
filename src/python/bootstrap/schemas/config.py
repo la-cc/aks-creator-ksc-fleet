@@ -40,13 +40,6 @@ config_schema = Schema({
                         Optional("hostname"): str
                     }
                 },
-                Optional("sealed_secrets"): {
-                    Optional("enabled", default=False): bool,
-                    Optional("tls"): {
-                        Optional("crt"): str,
-                        Optional("key"): str
-                    }
-                },
 
                 Optional("security"): {
                     Optional("clusterIssuerDNS"): {
@@ -62,7 +55,7 @@ config_schema = Schema({
                     },
                     Optional("externalSecrets"): {
                         Optional("clusterSecretStoreName", default="azure-cluster-secret-store"): str,
-                        "identityId": str,
+                        Optional("identityId"): str,
                         "vaultUrl": str
                     }
 
