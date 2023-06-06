@@ -23,12 +23,14 @@ spec:
       name: "{{name}}-victoria-metrics-alert-alerts"
       annotations:
         argocd.argoproj.io/manifest-generate-paths: ".;.."
+{% endraw %}
     spec:
       project: default
       source:
-        repoURL: https://dev.azure.com/HPA-HSA/excelsior/_git/cloud-kubernetes-service-catalog
+        repoURL: {{ ksc.repoURL }}
         targetRevision: main
         path: "./kustomize/monitoring/victoria-metrics-alert-alerts"
+{% raw %}
       destination:
         name: "{{name}}"
         namespace: "victoria-metrics"
