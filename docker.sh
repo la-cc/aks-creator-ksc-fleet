@@ -1,5 +1,6 @@
 #! /bin/bash
 REGISTRY="ghcr.io/la-cc"
+REPO_NAME=$(basename -s .git $(git config --get remote.origin.url))
 
 # get current tag information
 IS_DEV_BUILD=$(git tag -l --contains HEAD)
@@ -17,4 +18,4 @@ echo "Building image with tag $TAG"
 docker \
     build . \
     -f build/docker/Dockerfile \
-    -t $(echo "$REGISTRY/appcommons:$TAG")
+    -t $(echo "$REGISTRY/$REPO_NAME:$TAG")

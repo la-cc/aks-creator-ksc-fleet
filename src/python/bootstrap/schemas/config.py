@@ -20,6 +20,10 @@ config_schema = Schema({
                     Optional("git_repository_PAT"): str,
                     Optional("git_repository_user"): str,
                     Optional("external_secret_enabled", default=True): bool,
+                    Optional("additional_stage"): {
+                        Optional("stage_name"): str,
+                        Optional("app_repository_URL"): str
+                    },
                     Optional("ingress"): {
                         Optional("enabled", default=False): bool,
                         Optional("hostname"): str,

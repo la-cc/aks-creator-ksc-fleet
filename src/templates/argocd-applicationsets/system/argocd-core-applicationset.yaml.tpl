@@ -28,6 +28,11 @@ spec:
       project: default
       sources:
         - repoURL: {{ ksc.repoURL }}
+{% raw %}
+          targetRevision: main
+          path: "./cluster/{{name}}/system/argocd-core"
+{% endraw %}
+        - repoURL: {{ ksc.repoURL }}
           targetRevision: main
           ref: valuesRepo
 {% raw %}
