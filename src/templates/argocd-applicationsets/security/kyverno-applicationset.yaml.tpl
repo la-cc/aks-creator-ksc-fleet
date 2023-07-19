@@ -17,15 +17,18 @@ spec:
             env: production
         values:
           branch: development
+{% raw %}
   template:
     metadata:
       name: "{{name}}-kyverno"
       annotations:
         argocd.argoproj.io/manifest-generate-paths: ".;.."
+{% endraw %}
     spec:
       project: default
       sources:
-        - repoURL: git@ssh.dev.azure.com:v3/HPA-HSA/excelsior/cloud-kubernetes-service-catalog
+        - repoURL: {{ ksc.repoURL }}
+{% raw %}
           targetRevision: main
           path: "./cluster/{{name}}/security/kyverno/policies"
         - repoURL: https://github.com/Hamburg-Port-Authority/kubernetes-service-catalog.git
@@ -46,3 +49,4 @@ spec:
           - CreateNamespace=true
         retry:
           limit: 5
+{% endraw %}
