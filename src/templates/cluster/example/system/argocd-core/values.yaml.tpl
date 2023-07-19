@@ -1,20 +1,28 @@
 init:
   application:
-    enabled: {{ cluster.service_catalog.argocd_core.application_enabled | lower }}
-    path: "{{ cluster.service_catalog.argocd_core.git_repository_path }}"
-    targetRevision: "main"
+  {%- for init in cluster.service_catalog.argocd_core.initializer %}
+    - repository: {{ init.git_repository_URL }}
+      applicationEnabled: {{ init.application_enabled | lower }}
+      path: "{{ init.git_repository_path }}"
+      targetRevision: {{ init.targetRevision }}
+      manifestId: {{ init.manifestId }}
+  {% endfor %}
   repository:
-    enabled: {{ cluster.service_catalog.argocd_core.git_repository_enabled | lower }}
-    url: "{{ cluster.service_catalog.argocd_core.git_repository_URL }}"
-    #private == username + pw or ssh-key are needed
-  {% if cluster.service_catalog.argocd_core.git_repository_private %}
-    username: "{{ cluster.service_catalog.argocd_core.git_repository_user }}"
-    password: "{{ cluster.service_catalog.argocd_core.git_repository_PAT}}"
-  {% endif %}
-    insecure: "false"
-    forceHttpBasicAuth: "true"
+  {%- for init in cluster.service_catalog.argocd_core.initializer %}
+    - repositoryEnabled: {{ init.git_repository_enabled | lower }}
+      url: "{{ init.git_repository_URL }}"
+      manifestId: {{ init.manifestId }}
+      #private == username + pw or ssh-key are needed
+    {% if init.git_repository_private %}
+      username: "{{ init.git_repository_user }}"
+      password: "{{ init.git_repository_PAT}}"
+      insecure: "false"
+      forceHttpBasicAuth: "true"
+    {% endif %}
+  {% endfor %}
   externalSecret:
     enabled: {{ cluster.service_catalog.argocd_core.external_secret_enabled | lower }}
+
 
 ingress:
   enabled: "true"

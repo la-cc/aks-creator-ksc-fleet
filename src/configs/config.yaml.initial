@@ -4,11 +4,15 @@ clusters:
   - name: <aks-val....>
     service_catalog:
       argocd_core:
-        git_repository_URL: <https://dev.azure.com/OGRA/...>
-        git_repository_path: <argocd-applicationsets/env/...>
-        git_repository_private: true
-        git_repository_PAT: <kt....>
-        git_repository_user: <ORGA>
+        initializer:
+          - application_enabled: true
+            git_repository_URL: <https://dev.azure.com/OGRA/...>
+            git_repository_path: <applicationset/env/development>
+            git_repository_enabled: <false>
+            git_repository_private: <false>
+            manifestId: <development>
+            targetRevision: <"main">
+        external_secret_enabled: <true>
         ingress:
           enabled: true
           hostname: <argocd.val...example.com>

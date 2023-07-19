@@ -12,18 +12,20 @@ config_schema = Schema({
             },
             "service_catalog": {
                 "argocd_core": {
-                    "git_repository_URL": str,
-                    "git_repository_path": str,
-                    Optional("application_enabled", default=True): bool,
-                    Optional("git_repository_enabled", default=False): bool,
-                    Optional("git_repository_private", default=False): bool,
-                    Optional("git_repository_PAT"): str,
-                    Optional("git_repository_user"): str,
+                    "initializer": [
+                        {
+                            Optional("application_enabled", default=True): bool,
+                            Optional("git_repository_enabled", default=False): bool,
+                            "manifestId": str,
+                            "git_repository_URL": str,
+                            "git_repository_path": str,
+                            Optional("git_repository_PAT"): str,
+                            Optional("git_repository_user"): str,
+                            Optional("git_repository_private", default=False): bool,
+                            Optional("targetRevision", default="main"): str,
+                        },
+                    ],
                     Optional("external_secret_enabled", default=True): bool,
-                    Optional("additional_stage"): {
-                        Optional("stage_name"): str,
-                        Optional("app_repository_URL"): str
-                    },
                     Optional("ingress"): {
                         Optional("enabled", default=False): bool,
                         Optional("hostname"): str,
