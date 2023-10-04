@@ -25,3 +25,5 @@ loki:
       enableStatefulSetAutoDeletePVC: {{ cluster.service_catalog.monitoring.loki.backend.persistence.autoDeletePVC }}
       size: {{ cluster.service_catalog.monitoring.loki.read.persistence.size }}Gi
       storageClass: {{ cluster.defaults.storageClass }}
+  rbac:
+    pspEnabled: false

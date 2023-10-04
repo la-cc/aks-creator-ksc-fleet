@@ -23,9 +23,14 @@ spec:
       name: "{{name}}-nginx-ingress"
       annotations:
         argocd.argoproj.io/manifest-generate-paths: ".;.."
+{% endraw %}
     spec:
       project: default
       sources:
+        - repoURL: {{ ksc.repoURL }}
+          targetRevision: main
+          ref: valuesRepo
+{% raw %}
         - repoURL: https://github.com/Hamburg-Port-Authority/kubernetes-service-catalog.git
           targetRevision: "{{values.branch}}"
           path: "./networking/ingress-nginx"
@@ -33,6 +38,7 @@ spec:
             releaseName: "ingress-nginx" # Release name override (defaults to application name)
             valueFiles:
               - "values.yaml"
+              - "$valuesRepo/cluster/{{name}}/networking/nginx-ingress/values.yaml"
       destination:
         name: "{{name}}"
         namespace: "nginx-ingress"
