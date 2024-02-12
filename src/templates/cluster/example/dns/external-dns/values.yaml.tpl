@@ -8,6 +8,7 @@ external-dns:
     tenantId: {{ cluster.service_catalog.externalDNS.tenantID }}
     subscriptionId: {{ cluster.service_catalog.externalDNS.subscriptionID }}
     useManagedIdentityExtension: true
+    userAssignedIdentityID: {{ cluster.service_catalog.externalDNS.userAssignedIdentityID }}
   domainFilters:
   {%- for filter in cluster.service_catalog.externalDNS.domain_filters %}
     - {{ filter }}

@@ -35,6 +35,7 @@ clusters:
           enabled: true
           e_mail: <testuser@example.com>
           subscriptionID: <e18....>
+          userAssignedIdentityID <941e....> #Client ID from user managed identity e.g. aks-valiant-development-agentpool
           resourceGroupName: <rg-va...>
           hostedZoneName: <val...example.com>
         clusterIssuerHTTP:

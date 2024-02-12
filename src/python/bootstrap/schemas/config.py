@@ -37,6 +37,7 @@ config_schema = Schema({
                     Optional("resource_group"): str,
                     Optional("tenantID"): str,
                     Optional("subscriptionID"): str,
+                    Optional("userAssignedIdentityID"): str,
                     Optional("domain_filters"): list,
                     Optional("txtOwnerId"): str,
                 },
