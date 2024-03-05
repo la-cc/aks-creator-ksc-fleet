@@ -10,6 +10,10 @@ config_schema = Schema({
                 Optional("clusterIssuerDNS", default="letsencrypt-dns"): str,
                 Optional("clusterIssuerHTTP", default="letsencrypt-http"): str,
             },
+            "global": {
+                Optional("kubeletManagedIdentity"): str,
+                Optional("subscriptionID"): str,
+            },
             "service_catalog": {
                 "argocd_core": {
                     "initializer": [

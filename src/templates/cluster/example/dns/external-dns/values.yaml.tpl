@@ -6,9 +6,9 @@ external-dns:
   azure:
     resourceGroup: {{ cluster.service_catalog.externalDNS.resource_group }}
     tenantId: {{ cluster.service_catalog.externalDNS.tenantID }}
-    subscriptionId: {{ cluster.service_catalog.externalDNS.subscriptionID }}
+    subscriptionId: {{ cluster.global.subscriptionID }}
     useManagedIdentityExtension: true
-    userAssignedIdentityID: {{ cluster.service_catalog.externalDNS.userAssignedIdentityID }}
+    userAssignedIdentityID: {{ cluster.global.kubeletManagedIdentity }}
   domainFilters:
   {%- for filter in cluster.service_catalog.externalDNS.domain_filters %}
     - {{ filter }}
